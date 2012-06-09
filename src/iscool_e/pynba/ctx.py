@@ -1,9 +1,20 @@
+# -*- coding: utf-8 -*-
+"""
+    IsCool-e Pynba
+    ~~~~~~~~~~~~~~
+
+    DOC DOC.
+
+    :copyright: (c) 2012 by IsCool Entertainment.
+    :license: BSD, see LICENSE for more details.
+"""
+
 from .globals import _request_ctx_stack
 from .collector import DataCollector
 
 class RequestContext(object):
-    def __init__(self, pimbeche, environ):
-        self.pimbeche = pimbeche
+    def __init__(self, reporter, environ):
+        self.reporter = reporter
         #: gonna be DataCollector
         self.pynba = None
         self.scriptname = environ.get('PATH_INFO', None)
@@ -48,10 +59,13 @@ class RequestContext(object):
             return
 
         self.pynba.stop()
-
+        print self.pynba.elapsed
+        print self.pynba.elapsed
+        print self.pynba.elapsed
+        print self.pynba.elapsed
         timers = [timer for timer in self.pynba.timers if timer.elapsed]
 
-        self.pimbeche(
+        self.reporter(
             servername= self.servername,
             hostname= self.pynba.hostname,
             scriptname= self.pynba.scriptname,

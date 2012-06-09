@@ -1,40 +1,40 @@
-from wsgiref.util import setup_testing_defaults
 from wsgiref.simple_server import make_server
 from iscool_e.pynba.middleware import PynbaMiddleware
 from iscool_e.pynba.globals import pynba
-from nose.tools import nottest
-setup_testing_defaults = nottest(setup_testing_defaults)
+from time import sleep
+import logging
 
 def simple_app(environ, start_response):
-    print "foo"
-    setup_testing_defaults(environ)
+    if environ.get('PATH_INFO', None) == '/favicon.ico':
+        pynba.enabled = False
 
-    # test a flush
-    pynba.flush()
-    timer1 = pynba.timer(foo='foo', bar='bar', baz='baz')
-    timer2 = pynba.timer(bar='bar', baz='baz').start()
+    logging.debug('enter simple app')
+
+    # TODO: implement a flush
+
+    logging.debug('init first timer without starting it')
+    timer1 = pynba.timer(foo=['foo', 'foo2'], bar=['bar', 'bar2'], baz='baz')
+
+    logging.debug('init 2nd timer with multivalues tag')
+    timer2 = pynba.timer(multi_bar=['multi1', 'multi2'], baz='baz').start()
+
     status = '200 OK'
     headers = [('Content-type', 'text/plain')]
-    with pynba.timer(bar='bar', baz='baz'):
-        print "lol"
+    logging.debug('init 3rd as a context')
+    with pynba.timer(context_bar='bar', context_baz='baz'):
+        sleep(1)
 
-    @pynba.timer(bar='bar', baz='baz')
+    logging.debug('init 4th as a decorator')
+    @pynba.timer(decorator_bar='bar', decorator_baz='baz')
     def trololo():
         return "foo"
 
-    # trololo = pynba.timer('bar', 'baz')(trololo)
-
+    logging.debug('call decorated 5 times')
     trololo()
-
     trololo()
-
     trololo()
-
     trololo()
-
-    timer = pynba.timer(bar='bar', baz='baz')
-
-    trololo = timer(trololo)
+    trololo()
 
     start_response(status, headers)
 
@@ -61,7 +61,7 @@ def call_as_wsgi(callable, environ=None, close=True):
 
 
 if __name__ == '__main__':
-    app = PynbaMiddleware(simple_app, ('127.0.0.1', 3456))
+    app = PynbaMiddleware(simple_app, ('127.0.0.1', 30002))
     httpd = make_server('', 5000, app)
     print "Serving on port 5000..."
     httpd.serve_forever()

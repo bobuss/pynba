@@ -1,14 +1,25 @@
+# -*- coding: utf-8 -*-
+"""
+    IsCool-e Pynba
+    ~~~~~~~~~~~~~~
+
+    DOC DOC.
+
+    :copyright: (c) 2012 by IsCool Entertainment.
+    :license: BSD, see LICENSE for more details.
+"""
+
 from socket import socket, AF_INET, SOCK_DGRAM
 import logging
 from .pinba_pb2 import Request
 
-class Pimbeche(object):
+class Reporter(object):
     def __init__(self, address):
         self.address = address
         self.sock = socket(AF_INET, SOCK_DGRAM)
 
     def __call__(self, servername, hostname, scriptname, elapsed, timers):
-        msg = Pimbeche.prepare(servername, hostname, scriptname, elapsed, timers)
+        msg = Reporter.prepare(servername, hostname, scriptname, elapsed, timers)
         self.send(msg)
 
     @staticmethod
@@ -46,15 +57,21 @@ class Pimbeche(object):
 
                 # Encode associated tags
                 tag_count = 0
-                for name, value in timer.tags.iteritems():
+                for name, values in timer.tags.iteritems():
                     if name not in dictionary:
                         dictionary.append(name)
-                    value = str(value)
-                    if value not in dictionary:
-                        dictionary.append(value)
-                    msg.timer_tag_name.append(dictionary.index(name))
-                    msg.timer_tag_value.append(dictionary.index(value))
-                    tag_count += 1
+                    if not isinstance(values, (list, tuple, set)):
+                        values = [values]
+                    else:
+                        values = set(values)
+
+                    for value in values:
+                        value = str(value)
+                        if value not in dictionary:
+                            dictionary.append(value)
+                        msg.timer_tag_name.append(dictionary.index(name))
+                        msg.timer_tag_value.append(dictionary.index(value))
+                        tag_count += 1
 
                 # Number of tags
                 msg.timer_tag_count.append(tag_count)

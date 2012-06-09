@@ -1,4 +1,16 @@
-from time import clock as time
+# -*- coding: utf-8 -*-
+"""
+    IsCool-e Pynba
+    ~~~~~~~~~~~~~~
+
+    DOC DOC.
+
+    :copyright: (c) 2012 by IsCool Entertainment.
+    :license: BSD, see LICENSE for more details.
+"""
+
+# from time import clock as time
+from time import time
 import functools
 from copy import copy
 import logging
@@ -18,6 +30,9 @@ class Timer(object):
     __slots__ = ('tags', 'data', '_start', 'elapsed')
 
     def __init__(self, **tags):
+        """
+        tags values can be any scalar or array of values.
+        """
         self.tags = dict(tags)
         self.data = None
 

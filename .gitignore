@@ -18,3 +18,4 @@ sloccount.sc
 xunit.xml
 .coverage
 cover/
+nose_exclude-0.1.8-py2.6.egg/

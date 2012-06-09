@@ -1,3 +1,14 @@
+# -*- coding: utf-8 -*-
+"""
+    IsCool-e Pynba
+    ~~~~~~~~~~~~~~
+
+    DOC DOC.
+
+    :copyright: (c) 2012 by IsCool Entertainment.
+    :license: BSD, see LICENSE for more details.
+"""
+
 from functools import partial
 from werkzeug.local import LocalStack, LocalProxy
 

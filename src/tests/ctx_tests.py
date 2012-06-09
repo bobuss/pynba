@@ -9,11 +9,11 @@ from iscool_e.pynba.globals import _request_ctx_stack, pynba
 
 class ContextTestCase(unittest.TestCase):
     def test_context(self):
-        pimbeche = lambda x: x
+        reporter = lambda x: x
         environ = {}
 
         top = _request_ctx_stack.top
-        ctx = RequestContext(pimbeche, environ)
+        ctx = RequestContext(reporter, environ)
         self.assertIsNot(ctx, top)
         ctx.push()
         top = _request_ctx_stack.top
@@ -25,11 +25,11 @@ class ContextTestCase(unittest.TestCase):
 
     def test_context2(self):
         with self.assertRaises(RuntimeError):
-            print pynba
+            pynba.enabled
 
-        pimbeche = lambda *x, **y: x
+        reporter = lambda *x, **y: x
         environ = {}
-        with RequestContext(pimbeche, environ) as ctx:
+        with RequestContext(reporter, environ) as ctx:
             timer = pynba.timer(foo='bar')
             self.assertIn(timer, pynba.timers)
 

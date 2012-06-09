@@ -18,12 +18,11 @@ class Reporter(object):
         self.address = address
         self.sock = socket(AF_INET, SOCK_DGRAM)
 
-    def __call__(self, servername, hostname, scriptname, elapsed, timers):
-        msg = Reporter.prepare(servername, hostname, scriptname, elapsed, timers)
+    def __call__(self, servername, hostname, scriptname, elapsed, timers, ru_utime=None, ru_stime=None):
+        msg = self.prepare(servername, hostname, scriptname, elapsed, timers, ru_utime, ru_stime)
         self.send(msg)
 
-    @staticmethod
-    def prepare(servername, hostname, scriptname, elapsed, timers):
+    def prepare(self, servername, hostname, scriptname, elapsed, timers, ru_utime=None, ru_stime=None):
         """pinba_flush()
         """
 
@@ -43,8 +42,8 @@ class Reporter(object):
         msg.document_size = 0
         msg.memory_peak = 0
         msg.request_time = elapsed
-        msg.ru_utime = 0.0
-        msg.ru_stime = 0.0
+        msg.ru_utime = ru_utime if ru_utime else 0.0
+        msg.ru_stime = ru_stime if ru_stime else 0.0
         msg.status = 200
 
         if timers:

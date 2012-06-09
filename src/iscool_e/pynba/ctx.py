@@ -9,6 +9,7 @@
     :license: BSD, see LICENSE for more details.
 """
 
+import resource
 from .globals import _request_ctx_stack
 from .collector import DataCollector
 
@@ -30,6 +31,7 @@ class RequestContext(object):
 
         self.pynba = DataCollector(self.scriptname, self.hostname)
         self.pynba.start()
+        self.resources = resource.getrusage(resource.RUSAGE_SELF)
 
     def pop(self):
         """Pops current request from local stack.
@@ -38,6 +40,7 @@ class RequestContext(object):
         if top is self:
             _request_ctx_stack.pop()
         self.pynba = None
+        self.resources = None
 
     def __enter__(self):
         """Starts current scope.
@@ -65,12 +68,18 @@ class RequestContext(object):
         print self.pynba.elapsed
         timers = [timer for timer in self.pynba.timers if timer.elapsed]
 
+        usage = resource.getrusage(resource.RUSAGE_SELF)
+        ru_utime = usage.ru_utime - self.resources.ru_utime
+        ru_stime = usage.ru_stime - self.resources.ru_stime
+
         self.reporter(
             servername= self.servername,
             hostname= self.pynba.hostname,
             scriptname= self.pynba.scriptname,
             elapsed= self.pynba.elapsed,
-            timers= timers
+            timers= timers,
+            ru_utime= ru_utime,
+            ru_stime= ru_stime
         )
 
         self.pynba.flush()

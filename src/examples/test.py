@@ -3,6 +3,10 @@ from iscool_e.pynba import monitor, pynba
 from time import sleep
 import logging
 
+@pynba.timer(outsider="bar")
+def outside():
+    return
+
 @monitor(('127.0.0.1', 30002))
 def app(environ, start_response):
     if environ.get('PATH_INFO', None) == '/favicon.ico':
@@ -35,6 +39,9 @@ def app(environ, start_response):
     trololo()
     trololo()
     trololo()
+
+    outside()
+    outside()
 
     start_response(status, headers)
 

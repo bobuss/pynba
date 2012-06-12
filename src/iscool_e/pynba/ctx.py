@@ -79,4 +79,3 @@ class RequestContext(object):
         )
 
         self.pynba.flush()
-

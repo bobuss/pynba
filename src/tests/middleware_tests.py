@@ -11,6 +11,7 @@ setup_testing_defaults = nottest(setup_testing_defaults)
 
 from iscool_e.pynba.middleware import PynbaMiddleware
 from iscool_e.pynba.globals import pynba
+from iscool_e.pynba import monitor
 
 class MiddlewareTestCase(unittest.TestCase):
     def test_context(self):
@@ -40,3 +41,13 @@ class MiddlewareTestCase(unittest.TestCase):
         if close and hasattr(result, 'close'):
             result.close()
         return meta[0], meta[1], content
+
+    def test_monitor_decorator(self):
+        @monitor(('127.0.0.1', 30002))
+        def foo(environ, start_response):
+            return
+
+        environ = {}
+        setup_testing_defaults(environ)
+        start_response = None
+        foo(environ, start_response)

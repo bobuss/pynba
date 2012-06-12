@@ -25,20 +25,17 @@ pynba = LocalProxy(partial(_lookup_object, 'pynba', True))
 
 
 class Fallback(object):
-    """Used to define timers globally.
+    """Used to define timers globally of a context.
     """
-    class Timer(object):
-        def __init__(self, **tags):
-            self.tags = tags
-
-        def __call__(self, func):
-            @wraps(func)
-            def wrapper(*args, **kwargs):
-                with pynba.timer(**self.tags):
-                    response = func(*args, **kwargs)
-                return response
-            return wrapper
 
     @staticmethod
     def timer(**tags):
-        return Fallback.Timer(**tags)
+        def decorator(func):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                pynba = _lookup_object("pynba", fallback=False)
+                with pynba.timer(**tags):
+                    response = func(*args, **kwargs)
+                return response
+            return wrapper
+        return decorator

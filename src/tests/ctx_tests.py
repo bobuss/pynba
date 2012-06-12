@@ -24,7 +24,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertIsNot(ctx, top)
 
     def test_context2(self):
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises((RuntimeError, AttributeError)):
             pynba.enabled
 
         reporter = lambda *x, **y: x
@@ -34,7 +34,7 @@ class ContextTestCase(unittest.TestCase):
             self.assertIn(timer, pynba.timers)
 
         ctx.flush()
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises((RuntimeError, AttributeError)):
             self.assertIn(timer, pynba.timers)
 
         with ctx:

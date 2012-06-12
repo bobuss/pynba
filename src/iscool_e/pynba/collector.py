@@ -9,7 +9,6 @@
     :license: BSD, see LICENSE for more details.
 """
 
-# from time import clock as time
 from time import time
 import functools
 from copy import copy

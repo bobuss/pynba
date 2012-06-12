@@ -1,10 +1,10 @@
 from wsgiref.simple_server import make_server
-from iscool_e.pynba.middleware import PynbaMiddleware
-from iscool_e.pynba.globals import pynba
+from iscool_e.pynba import monitor, pynba
 from time import sleep
 import logging
 
-def simple_app(environ, start_response):
+@monitor(('127.0.0.1', 30002))
+def app(environ, start_response):
     if environ.get('PATH_INFO', None) == '/favicon.ico':
         pynba.enabled = False
 
@@ -43,25 +43,7 @@ def simple_app(environ, start_response):
     return ret
 
 
-def call_as_wsgi(callable, environ=None, close=True):
-    """Invoke callable via WSGI, returning status, headers, response."""
-    if environ is None:
-        environ = {}
-        setup_testing_defaults(environ)
-
-    meta = []
-    def start_response(status, headers):
-        meta.extend((status, headers))
-
-    result = callable(environ, start_response)
-    content = ''.join(result)
-    if close and hasattr(result, 'close'):
-        result.close()
-    return meta[0], meta[1], content
-
-
 if __name__ == '__main__':
-    app = PynbaMiddleware(simple_app, ('127.0.0.1', 30002))
     httpd = make_server('', 5000, app)
     print "Serving on port 5000..."
     httpd.serve_forever()

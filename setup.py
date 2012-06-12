@@ -18,7 +18,7 @@ if sys.version_info < (2, 7):
 
 setup(name='iscool_e.pynba',
     version=version,
-    description="wsgi middleware for pinba",
+    description='This is a wsgi middleware to monitor performance in production systems',
     long_description=README + '\n\n' + NEWS,
     classifiers=[
         "Intended Audience :: Developers",
@@ -34,7 +34,7 @@ setup(name='iscool_e.pynba',
         "Topic :: System :: Monitoring",
         "Topic :: Utilities"
     ],
-    keywords='pinba wsgi',
+    keywords='pinba wsgi monitoring',
     author='Xavier Barbosa',
     author_email='xavier.barbosa@iscool-e.com',
     url='git@git.iscoolapp.com:pynba.git',

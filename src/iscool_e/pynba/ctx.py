@@ -62,10 +62,6 @@ class RequestContext(object):
             return
 
         self.pynba.stop()
-        print self.pynba.elapsed
-        print self.pynba.elapsed
-        print self.pynba.elapsed
-        print self.pynba.elapsed
         timers = [timer for timer in self.pynba.timers if timer.elapsed]
 
         usage = resource.getrusage(resource.RUSAGE_SELF)

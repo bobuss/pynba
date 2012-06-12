@@ -14,15 +14,18 @@ import logging
 from .pinba_pb2 import Request
 
 class Reporter(object):
+    __slots__ = ('address', 'sock')
+
     def __init__(self, address):
         self.address = address
         self.sock = socket(AF_INET, SOCK_DGRAM)
 
     def __call__(self, servername, hostname, scriptname, elapsed, timers, ru_utime=None, ru_stime=None):
-        msg = self.prepare(servername, hostname, scriptname, elapsed, timers, ru_utime, ru_stime)
+        msg = Reporter.prepare(servername, hostname, scriptname, elapsed, timers, ru_utime, ru_stime)
         self.send(msg)
 
-    def prepare(self, servername, hostname, scriptname, elapsed, timers, ru_utime=None, ru_stime=None):
+    @staticmethod
+    def prepare(servername, hostname, scriptname, elapsed, timers, ru_utime=None, ru_stime=None):
         """pinba_flush()
         """
 

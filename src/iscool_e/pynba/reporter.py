@@ -11,6 +11,7 @@
 
 from socket import socket, AF_INET, SOCK_DGRAM
 import logging
+import collections
 from .pinba_pb2 import Request
 
 class Reporter(object):
@@ -59,21 +60,14 @@ class Reporter(object):
 
                 # Encode associated tags
                 tag_count = 0
-                for name, values in timer.tags.iteritems():
+                for name, value in flattener(timer.tags):
                     if name not in dictionary:
                         dictionary.append(name)
-                    if not isinstance(values, (list, tuple, set)):
-                        values = [values]
-                    else:
-                        values = set(values)
-
-                    for value in values:
-                        value = str(value)
-                        if value not in dictionary:
-                            dictionary.append(value)
-                        msg.timer_tag_name.append(dictionary.index(name))
-                        msg.timer_tag_value.append(dictionary.index(value))
-                        tag_count += 1
+                    if value not in dictionary:
+                        dictionary.append(value)
+                    msg.timer_tag_name.append(dictionary.index(name))
+                    msg.timer_tag_value.append(dictionary.index(value))
+                    tag_count += 1
 
                 # Number of tags
                 msg.timer_tag_count.append(tag_count)
@@ -86,3 +80,48 @@ class Reporter(object):
 
     def send(self, msg):
         return self.sock.sendto(msg, self.address)
+
+
+def flattener(tags):
+    """
+    Flatten tags Mapping into a list of tuple.
+    :tags: must be a Mapping that implements iteritems()
+
+    >>> flattener({'foo': 12})
+    [('foo', '12')]
+    >>> flattener({'foo': [12, 13]})
+    [('foo', '12'), ('foo', '13')]
+    >>> flattener({'foo': [12]})
+    [('foo', '12')]
+    >>> flattener({'foo': [12]})
+    [('foo', '12')]
+    >>> flattener({'foo': {'foo': [12]}})
+    [('foo.foo', '12')]
+    >>> flattener({'foo': lambda : ['bar', 'baz']})
+    [('foo', 'bar'), ('foo', 'baz')]
+    >>> flattener({'foo': {42: [12]}})
+    [('foo.42', '12')]
+
+    """
+    def flatten(tags, namespace=None):
+        pref = ''
+        if namespace is not None:
+            pref = "{0!s}.".format(namespace)
+
+        output = []
+        for key, value in tags.iteritems():
+            if isinstance(value, collections.Callable):
+                value = value()
+
+            if isinstance(value, collections.Sequence):
+                output.extend((pref + str(key), v) for v in set(value))
+            elif isinstance(value, collections.Mapping):
+                output.extend(flatten(value, namespace=key))
+            else:
+                output.append((pref + key, value))
+
+        return output
+
+    data = set(flatten(tags))
+    return [(key, str(value)) for key, value in data]
+

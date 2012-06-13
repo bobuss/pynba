@@ -30,7 +30,8 @@ class Timer(object):
 
     def __init__(self, **tags):
         """
-        tags values can be any scalar or array of values.
+        tags values can be any scalar, mapping, sequence or callable.
+        In case of a callable, redered value must be a sequence.
         """
         self.tags = dict(tags)
         self.data = None

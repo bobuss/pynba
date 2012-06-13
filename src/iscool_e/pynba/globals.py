@@ -39,3 +39,4 @@ class Fallback(object):
                 return response
             return wrapper
         return decorator
+

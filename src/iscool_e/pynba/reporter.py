@@ -10,8 +10,9 @@
 """
 
 from socket import socket, AF_INET, SOCK_DGRAM
-import logging
 import collections
+import logging
+import types
 from .pinba_pb2 import Request
 
 class Reporter(object):
@@ -87,6 +88,8 @@ def flattener(tags):
     Flatten tags Mapping into a list of tuple.
     :tags: must be a Mapping that implements iteritems()
 
+    >>> flattener({'foo': 'bar'})
+    [('foo', 'bar')]
     >>> flattener({'foo': 12})
     [('foo', '12')]
     >>> flattener({'foo': [12, 13]})
@@ -113,7 +116,8 @@ def flattener(tags):
             if isinstance(value, collections.Callable):
                 value = value()
 
-            if isinstance(value, collections.Sequence):
+            if isinstance(value, collections.Sequence) \
+                and not isinstance(value, types.StringTypes):
                 output.extend((pref + str(key), v) for v in set(value))
             elif isinstance(value, collections.Mapping):
                 output.extend(flatten(value, namespace=key))

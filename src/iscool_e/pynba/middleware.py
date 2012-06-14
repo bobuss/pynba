@@ -13,14 +13,17 @@ from .reporter import Reporter
 from .ctx import RequestContext
 
 class PynbaMiddleware(object):
-    def __init__(self, app, address):
+    default_ctx = RequestContext
+
+    def __init__(self, app, address, **config):
         self.app = app
         self.reporter = Reporter(address)
+        self.config = config
 
     def __call__(self, environ, start_response):
         with self.request_context(environ):
             return self.app(environ, start_response)
 
     def request_context(self, environ):
-        return RequestContext(self.reporter, environ)
+        return self.default_ctx(self.reporter, environ, **self.config)
 

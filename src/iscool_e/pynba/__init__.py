@@ -15,8 +15,8 @@ __all__ = ['monitor', 'pynba']
 from .middleware import PynbaMiddleware
 from .globals import pynba
 
-def monitor(address):
+def monitor(address, **config):
     def wrapper(func):
-        return PynbaMiddleware(func, address)
+        return PynbaMiddleware(func, address, **config)
     return wrapper
 

@@ -7,8 +7,10 @@ import logging
 def outside():
     return
 
-@monitor(('127.0.0.1', 30002))
+@monitor(('127.0.0.1', 30002), prefix='[foo]')
 def app(environ, start_response):
+    pynba.scriptname = '[lol]' + pynba.scriptname
+
     if environ.get('PATH_INFO', None) == '/favicon.ico':
         pynba.enabled = False
 

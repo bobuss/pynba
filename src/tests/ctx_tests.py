@@ -8,6 +8,15 @@ from iscool_e.pynba.collector import DataCollector
 from iscool_e.pynba.globals import _request_ctx_stack, pynba
 
 class ContextTestCase(unittest.TestCase):
+    def test_config(self):
+        reporter = lambda x: x
+        environ = {}
+        ctx = RequestContext(reporter, environ)
+        assert ctx.scriptname == ''
+
+        ctx = RequestContext(reporter, environ, prefix="foo")
+        assert ctx.scriptname.startswith('foo')
+
     def test_context(self):
         reporter = lambda x: x
         environ = {}

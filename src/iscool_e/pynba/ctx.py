@@ -14,11 +14,19 @@ from .globals import _request_ctx_stack
 from .collector import DataCollector
 
 class RequestContext(object):
-    def __init__(self, reporter, environ):
+    def __init__(self, reporter, environ, **config):
+        """
+        :config: may have these keys:
+        ``prefix`` will preprend scriptname
+        """
+
         self.reporter = reporter
         #: gonna be DataCollector
         self.pynba = None
-        self.scriptname = environ.get('PATH_INFO', None)
+
+        #: may use config['prefix']
+        self.scriptname = config.get(
+            'prefix', '') + environ.get('PATH_INFO', '')
         self.hostname = environ.get('SERVER_NAME', None)
         self.servername = environ.get('HTTP_HOST', None)
 

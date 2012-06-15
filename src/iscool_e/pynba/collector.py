@@ -30,7 +30,7 @@ class Timer(object):
 
     def __init__(self, **tags):
         """
-        tags values can be any scalar, mapping, sequence or callable.
+        Tags values can be any scalar, mapping, sequence or callable.
         In case of a callable, redered value must be a sequence.
         """
         self.tags = dict(tags)
@@ -110,9 +110,21 @@ class Timer(object):
 
 class DataCollector(object):
     """
-    pinba_get_info() not implemented
-    pinba_script_name_set() not implemented, use self.scriptname
-    pinba_hostname_set() not implemented, use hostname
+    This is the main data container.
+
+    Differences with the PHP version
+
+    =========================== =========================
+    PHP                         Python
+    =========================== =========================
+    pinba_get_info()            not applicabled while the current
+                                instance data are already exposed.
+    pinba_script_name_set()     self.scriptname
+    pinba_hostname_set()        not implemented, use hostname
+    pinba_timers_stop()         self.stop()
+    pinba_timer_start()         self.timer
+    =========================== =========================
+
     """
     __slots__ = ('enabled', 'timers', 'scriptname', 'hostname',
                  '_start', 'elapsed')
@@ -157,8 +169,7 @@ class DataCollector(object):
         self._start = time()
 
     def stop(self):
-        """Stops.
-        Same as PHP:pinba_timers_stop()
+        """Stops current elapsed time and every attached timers.
         """
         if not self._start:
             raise RuntimeError('Not started')
@@ -170,7 +181,6 @@ class DataCollector(object):
 
     def timer(self, **tags):
         """Factory new timer.
-        Same as PHP:pinba_timer_start()
         """
         timer = self.Timer(tags, self)
         self.timers.add(timer)

@@ -10,7 +10,6 @@ version = '0.1'
 install_requires = [
     'protobuf',
     'werkzeug',
-    'setuptools-ci',
 ]
 
 if sys.version_info < (2, 7):
@@ -38,7 +37,7 @@ setup(name='iscool_e.pynba',
     author='Xavier Barbosa',
     author_email='xavier.barbosa@iscool-e.com',
     url='git@git.iscoolapp.com:pynba.git',
-    license='',
+    license='MIT',
     packages=find_packages('src'),
     package_dir = {'': 'src'},
     namespace_packages = ['iscool_e'],

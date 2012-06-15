@@ -1,23 +1,84 @@
-This file requires editing
+IsCool Entertainment Pynba
 ==========================
 
-Note to the author: Please add something informative to this README *before*
-releasing your software, as `a little documentation goes a long way`_.  Both
-README.rst (this file) and NEWS.txt (release notes) will be included in your
-package metadata which gets displayed in the PyPI page for your project.
+Pynba is a WSGI Middleware for Pinba_. It allows realtime monitoring/statistics
+server using MySQL as a read-only interface.
 
-You can take a look at the README.txt of other projects, such as repoze.bfg
-(http://bfg.repoze.org/trac/browser/trunk/README.txt) for some ideas.
+It accumulates and processes data sent over UDP by multiple PHP processes and
+displays statistics in a nice human-readable form of simple "reports", also
+providing read-only interface to the raw data in order to make possible
+generation of more sophisticated reports and stats.
 
-.. _`a little documentation goes a long way`: http://www.martinaspeli.net/articles/a-little-documentation-goes-a-long-way
+With users also can measure particular parts of the code using timers with
+arbitrary tags.
+
+
+Requirements
+------------
+
+This library relies on Pynba_, Protobuf_ and Werkeug_.
+You will need to install theses packages before using Pynba.
+
+
+Setup
+-----
+
+The installation process requires setuptools to be installed.
+If it is not, please refer to the installation of this package.
+
+Then, download this package, and execute this command
+
+> python setup.py install
+
+It will download and install automacaly
+
+Usage
+-----
+
+Says that your main WSGI application is
+
+    def app(environ, start_response):
+        ...
+
+
+Import the pynba decorator, and decorate your main app with it
+
+    from iscool_e.pynba import monitor
+
+    @monitor(('127.0.0.1', 30002))
+    def app(environ, start_response):
+        ...
+
+Each time the app will be processed, a new UPD stream will be sent.
+
+Eventualy, you can use timers to measure particular parts of your code.
+For it, just import the pynba proxy, and use it to create new timers/
+
+    from iscool_e.pynba import pynba
+
+    timer = pynba.timer(foo="bar")
+    timer.start()
+    ...
+    timer.stop()
+
+
+Some use cases are available on src/examples/
+
+
+License
+-------
+
+This package is release under the MIT Licence.
+Please see LICENSE document for a full description.
+
 
 Credits
 -------
 
-- `Distribute`_
-- `Buildout`_
-- `modern-package-template`_
+- Pinba_
+- Werkzeug_
+- Protobuf_
 
-.. _Buildout: http://www.buildout.org/
-.. _Distribute: http://pypi.python.org/pypi/distribute
-.. _`modern-package-template`: http://pypi.python.org/pypi/modern-package-template
+.. _Pinba: http://pinba.org
+.. _Werkzeug: http://werkzeug.pocoo.org
+.. _Protobuf: http://code.google.com/p/protobuf/

@@ -3,7 +3,7 @@ from iscool_e.pynba import monitor, pynba
 from time import sleep
 import logging
 
-@pynba.timer(outsider="bar")
+@pynba.timer(outsider=["bar", "foo"])
 def outside():
     return
 

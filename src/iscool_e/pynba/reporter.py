@@ -3,10 +3,8 @@
     IsCool-e Pynba
     ~~~~~~~~~~~~~~
 
-    DOC DOC.
-
     :copyright: (c) 2012 by IsCool Entertainment.
-    :license: BSD, see LICENSE for more details.
+    :license: MIT, see LICENSE for more details.
 """
 
 from socket import socket, AF_INET, SOCK_DGRAM

@@ -3,16 +3,17 @@
     IsCool-e Pynba
     ~~~~~~~~~~~~~~
 
-    DOC DOC.
-
     :copyright: (c) 2012 by IsCool Entertainment.
-    :license: BSD, see LICENSE for more details.
+    :license: MIT, see LICENSE for more details.
 """
 
 from .reporter import Reporter
 from .ctx import RequestContext
 
 class PynbaMiddleware(object):
+    """Used to decorate main apps.
+    """
+
     default_ctx = RequestContext
 
     def __init__(self, app, address, **config):

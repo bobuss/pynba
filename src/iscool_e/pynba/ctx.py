@@ -3,10 +3,8 @@
     IsCool-e Pynba
     ~~~~~~~~~~~~~~
 
-    DOC DOC.
-
     :copyright: (c) 2012 by IsCool Entertainment.
-    :license: BSD, see LICENSE for more details.
+    :license: MIT, see LICENSE for more details.
 """
 
 import resource
@@ -17,7 +15,7 @@ class RequestContext(object):
     def __init__(self, reporter, environ, **config):
         """
         :config: may have these keys:
-        ``prefix`` will preprend scriptname
+        ``prefix`` will prepend scriptname
         """
 
         self.reporter = reporter

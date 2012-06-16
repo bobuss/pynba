@@ -3,7 +3,7 @@ try:
 except ImportError:
     import unittest
 
-from iscool_e.pynba.globals import Fallback, pynba, _request_ctx_stack
+from iscool_e.pynba.globals import Fallback, pynba, _CTX_STACK
 from contextlib import contextmanager
 
 class GlobalTestCase(unittest.TestCase):
@@ -25,7 +25,7 @@ class GlobalTestCase(unittest.TestCase):
                 self.pynba = X()
 
         bar = Ctx()
-        _request_ctx_stack.push(bar)
+        _CTX_STACK.push(bar)
 
         foo()
 

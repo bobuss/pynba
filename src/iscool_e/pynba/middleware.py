@@ -12,7 +12,11 @@ from .ctx import RequestContext
 
 class PynbaMiddleware(object):
     """Used to decorate main apps.
-    """
+
+    :param app: The main WSGI app that will be monitored.
+    :param address: The address to the UDP server.
+    :param config: basically optional parameters
+     """
 
     default_ctx = RequestContext
 
@@ -26,5 +30,9 @@ class PynbaMiddleware(object):
             return self.app(environ, start_response)
 
     def request_context(self, environ):
+        """
+        :param environ: The WSGI environ mapping.
+        :return: will return a new instance of :class:`~.ctx.RequestContext`
+        """
         return self.default_ctx(self.reporter, environ, **self.config)
 

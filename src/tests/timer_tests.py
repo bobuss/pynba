@@ -26,7 +26,7 @@ class TimerTestCase(unittest.TestCase):
 
             self.assertEqual(timer.tags, {'foo': 'bar'})
 
-        timer = Timer(foo="bar")
+        timer = Timer({"foo": "bar"})
 
         runner(timer)
 
@@ -36,7 +36,7 @@ class TimerTestCase(unittest.TestCase):
         runner(cloned)
 
     def test_timer_context(self):
-        timer = Timer(foo="bar")
+        timer = Timer({"foo": "bar"})
         self.assertFalse(timer.started)
         with timer as t:
             self.assertIs(timer, t)
@@ -49,12 +49,12 @@ class TimerTestCase(unittest.TestCase):
         def runner():
             return
 
-        timer = Timer(foo="bar")
+        timer = Timer({"foo": "bar"})
         decorated = timer(runner)
         decorated()
 
     def test_timer_repr(self):
-        timer = Timer(foo="bar")
+        timer = Timer({"foo": "bar"})
         assert 'Timer' in repr(timer)
         timer.start()
         assert 'started:' in repr(timer)

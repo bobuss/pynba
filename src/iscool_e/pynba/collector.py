@@ -14,40 +14,58 @@ import logging
 
 class Timer(object):
     """
-    pinba_timer_tags_merge
-    and pinba_timer_tags_replace
-    by python standard methods
+    Differences with the PHP version
 
-    pinba_timer_data_merge
-    pinba_timer_data_replace not implemented, use instance.data
+    =========================== =========================
+    PHP                         Python
+    =========================== =========================
+    pinba_timer_data_merge()    not applicabled use instance.data
+    pinba_timer_data_replace()  not applicabled use instance.data
+    pinba_timer_get_info()      not implemented
+    =========================== =========================
 
-    pinba_timer_get_info() not implemented
     """
 
-    __slots__ = ('tags', 'data', '_start', 'elapsed')
+    __slots__ = ('tags', 'data', '_start', 'elapsed', 'parent')
 
-    def __init__(self, **tags):
+    def __init__(self, tags, parent=None):
         """
         Tags values can be any scalar, mapping, sequence or callable.
         In case of a callable, redered value must be a sequence.
+
+        :param tags: each values can be any scalar, mapping, sequence or
+                     callable. In case of a callable, rendered value must
+                     be a sequence.
         """
         self.tags = dict(tags)
+        self.parent = parent
         self.data = None
 
         # timer
         self.elapsed = None
         self._start = None
 
+
     @property
     def started(self):
         """Tell if timer is started"""
         return bool(self._start)
 
+    def delete(self):
+        """Discards timer from parent
+        """
+        if self.parent:
+            self.parent.timers.discard(self)
+
     def clone(self):
-        """Clones timer"""
+        """Clones timer
+        """
         instance = copy(self)
         instance._start = None
         instance.elapsed = None
+
+        if self.parent:
+            self.parent.timers.add(instance)
         return instance
 
     def start(self):
@@ -83,6 +101,11 @@ class Timer(object):
     def __call__(self, func):
         """Acts as a decorator.
         Automatically starts and stops timer's clone.
+        Example::
+
+            @pynba.timer(foo=bar)
+            def function_to_be_timed(self):
+                pass
         """
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -110,6 +133,9 @@ class DataCollector(object):
     """
     This is the main data container.
 
+    :param scriptname: the current scriptname
+    :param hostname: the current hostname
+
     Differences with the PHP version
 
     =========================== =========================
@@ -126,26 +152,6 @@ class DataCollector(object):
     """
     __slots__ = ('enabled', 'timers', 'scriptname', 'hostname',
                  '_start', 'elapsed')
-
-    class Timer(Timer):
-        __slots__ = (list(Timer.__slots__) + ['parent'])
-        def __init__(self, tags, parent):
-            Timer.__init__(self, **tags)
-            self.parent = parent
-
-        def delete(self):
-            """Overwrites Timer.
-            Discards timer from parent
-            """
-            self.parent.timers.discard(self)
-
-        def clone(self):
-            """Overwrites Timer.
-            Adds timer to parent
-            """
-            cloned = Timer.clone(self)
-            self.parent.timers.add(cloned)
-            return cloned
 
     def __init__(self, scriptname=None, hostname=None):
         self.enabled = True
@@ -180,7 +186,7 @@ class DataCollector(object):
     def timer(self, **tags):
         """Factory new timer.
         """
-        timer = self.Timer(tags, self)
+        timer = Timer(tags, self)
         self.timers.add(timer)
 
         return timer

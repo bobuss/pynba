@@ -14,6 +14,11 @@ import types
 from .pinba_pb2 import Request
 
 class Reporter(object):
+    """Formats and send report to pinba server.
+
+    :param address: the address to the udp server.
+    """
+
     __slots__ = ('address', 'sock')
 
     def __init__(self, address):
@@ -21,12 +26,15 @@ class Reporter(object):
         self.sock = socket(AF_INET, SOCK_DGRAM)
 
     def __call__(self, servername, hostname, scriptname, elapsed, timers, ru_utime=None, ru_stime=None):
+        """
+        Same as PHP pinba_flush()
+        """
         msg = Reporter.prepare(servername, hostname, scriptname, elapsed, timers, ru_utime, ru_stime)
         self.send(msg)
 
     @staticmethod
     def prepare(servername, hostname, scriptname, elapsed, timers, ru_utime=None, ru_stime=None):
-        """pinba_flush()
+        """Prepares the message
         """
 
         logging.debug("Preprare protobuff", extra={
@@ -78,6 +86,7 @@ class Reporter(object):
         return msg.SerializeToString()
 
     def send(self, msg):
+        """Sends message to pinba server"""
         return self.sock.sendto(msg, self.address)
 
 

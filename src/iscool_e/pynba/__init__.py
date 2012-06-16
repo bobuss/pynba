@@ -15,6 +15,7 @@ from .globals import pynba
 
 def monitor(address, **config):
     """Simple decorator for WSGI app.
+    Parameters will be directly passed to the :class:`PynbaMiddleware`
     """
     def wrapper(func):
         return PynbaMiddleware(func, address, **config)

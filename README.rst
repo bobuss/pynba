@@ -52,7 +52,7 @@ Import the pynba decorator, and decorate your main app with it
 Each time the app will be processed, a new UPD stream will be sent.
 
 Eventualy, you can use timers to measure particular parts of your code.
-For it, just import the pynba proxy, and use it to create new timers/
+For it, just import the pynba proxy, and use it to create new timers::
 
     from iscool_e.pynba import pynba
 
@@ -64,6 +64,21 @@ For it, just import the pynba proxy, and use it to create new timers/
 
 Some use cases are available on src/examples/
 
+Differences with PHP extensions
+-------------------------------
+
+About the data sent:
+
+*   ``ru_utime`` and ``ru_stime`` represent the resource usage for the current
+    process, not the shared resources.
+*   ``document_size`` cannot be implemented, while there is no equivalent for
+    WSGI documents.
+*   ``memory_peak`` also is currently not implemented
+
+About timers:
+
+*   The Python version permites multiple values for each timer tags.
+    Just declare any sequences, mapping or callable.
 
 License
 -------

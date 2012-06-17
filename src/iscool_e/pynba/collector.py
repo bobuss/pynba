@@ -7,7 +7,7 @@
     :license: MIT, see LICENSE for more details.
 """
 
-from time import time
+from timeit import default_timer
 import functools
 from copy import copy
 import logging
@@ -72,14 +72,14 @@ class Timer(object):
         """Starts timer"""
         if self.started:
             raise RuntimeError('Already started')
-        self._start = time()
+        self._start = default_timer()
         return self
 
     def stop(self):
         """Stops timer"""
         if not self.started:
             raise RuntimeError('Not started')
-        self.elapsed = time() - self._start
+        self.elapsed = default_timer() - self._start
         self._start = None
         return self
 
@@ -170,14 +170,14 @@ class DataCollector(object):
         """Starts"""
         if self._start:
             raise RuntimeError('Already started')
-        self._start = time()
+        self._start = default_timer()
 
     def stop(self):
         """Stops current elapsed time and every attached timers.
         """
         if not self._start:
             raise RuntimeError('Not started')
-        self.elapsed = time() - self._start
+        self.elapsed = default_timer() - self._start
         self._start = None
         for timer in self.timers:
             if timer.started:
@@ -200,6 +200,6 @@ class DataCollector(object):
         })
 
         self.elapsed = None
-        self._start = time()
+        self._start = default_timer()
         self.timers.clear()
 

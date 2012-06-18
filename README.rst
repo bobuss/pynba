@@ -9,8 +9,8 @@ displays statistics in a nice human-readable form of simple "reports", also
 providing read-only interface to the raw data in order to make possible
 generation of more sophisticated reports and stats.
 
-With users also can measure particular parts of the code using timers with
-arbitrary tags.
+Users also can measure particular parts of the code using timers with arbitrary
+tags.
 
 
 Why another statistics manager ?
@@ -28,18 +28,14 @@ Requirements
 This library relies on Pinba_, Protobuf_ and Werkeug_.
 You will need to install theses packages before using Pynba.
 
+The installation process requires setuptools to be installed.
+If it is not, please refer to the installation of this package.
 
 Setup
 -----
 
-The installation process requires setuptools to be installed.
-If it is not, please refer to the installation of this package.
-
-Then, download this package, and execute this command
-
-> python setup.py install
-
-It will download and install automacaly
+$ git clone https://github.com/IsCoolEntertainment/pynba.git
+$ python setup.py install
 
 Usage
 -----
@@ -73,8 +69,8 @@ For it, just import the pynba proxy, and use it to create new timers::
 
 Some use cases are available on src/examples/
 
-Differences with PHP extensions
--------------------------------
+Differences with PHP extension
+------------------------------
 
 About the data sent:
 
@@ -97,7 +93,7 @@ About timers:
 
         pynba.timer(foo='bar', baz=['seq1', 'seq2'], qux={'map1': 'val1'})
 
-    Will be requestable into MySQL like this::
+    Will populates 4 values for 3 tags in the Pinba database::
 
         ('foo', 'bar'),
         ('baz, 'seq1'),

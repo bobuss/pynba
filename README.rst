@@ -13,10 +13,19 @@ With users also can measure particular parts of the code using timers with
 arbitrary tags.
 
 
+Why another statistics manager ?
+--------------------------------
+
+Because Pinba rocks!
+
+At `IsCool Entertainment`_, we already use Pinba for monitoring our PHP based
+applications.
+
+
 Requirements
 ------------
 
-This library relies on Pynba_, Protobuf_ and Werkeug_.
+This library relies on Pinba_, Protobuf_ and Werkeug_.
 You will need to install theses packages before using Pynba.
 
 
@@ -71,14 +80,29 @@ About the data sent:
 
 *   ``ru_utime`` and ``ru_stime`` represent the resource usage for the current
     process, not the shared resources.
-*   ``document_size`` cannot be implemented, while there is no equivalent for
-    WSGI documents.
-*   ``memory_peak`` also is currently not implemented
+*   ``document_size`` cannot be automaticaly processed with the current WSGI
+    specification. You are able to set manually this value like this::
+
+        pynba.document_size = [YOUR VALUE]
+
+*   ``memory_peak`` also is currently not implemented. Like the previous data,
+    you can set manually this value like this::
+
+        pynba.memory_peak = [YOUR VALUE]
 
 About timers:
 
 *   The Python version permites multiple values for each timer tags.
-    Just declare any sequences, mapping or callable.
+    Just declare any sequences, mapping or callable. This example::
+
+        pynba.timer(foo='bar', baz=['seq1', 'seq2'], qux={'map1': 'val1'})
+
+    Will be requestable into MySQL like this::
+
+        ('foo', 'bar'),
+        ('baz, 'seq1'),
+        ('baz, 'seq2'),
+        ('qux.map1', 'val1')
 
 License
 -------
@@ -97,3 +121,4 @@ Credits
 .. _Pinba: http://pinba.org
 .. _Werkzeug: http://werkzeug.pocoo.org
 .. _Protobuf: http://code.google.com/p/protobuf/
+.. _`IsCool Entertainment`: http://www.iscoolentertainment.com/en/

@@ -87,7 +87,8 @@ class RequestContext(object):
 
         self.pynba.stop()
         timers = [timer for timer in self.pynba.timers if timer.elapsed]
-
+        document_size = self.pynba.document_size
+        memory_peak = self.pynba.memory_peak
         usage = resource.getrusage(resource.RUSAGE_SELF)
         ru_utime = usage.ru_utime - self.resources.ru_utime
         ru_stime = usage.ru_stime - self.resources.ru_stime
@@ -99,7 +100,9 @@ class RequestContext(object):
             elapsed= self.pynba.elapsed,
             timers= timers,
             ru_utime= ru_utime,
-            ru_stime= ru_stime
+            ru_stime= ru_stime,
+            document_size= document_size,
+            memory_peak= memory_peak
         )
 
         self.pynba.flush()

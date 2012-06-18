@@ -151,7 +151,7 @@ class DataCollector(object):
 
     """
     __slots__ = ('enabled', 'timers', 'scriptname', 'hostname',
-                 '_start', 'elapsed')
+                 '_start', 'elapsed', 'document_size', 'memory_peak')
 
     def __init__(self, scriptname=None, hostname=None):
         self.enabled = True
@@ -160,6 +160,11 @@ class DataCollector(object):
         self.hostname = hostname
         self._start = None
         self.elapsed = None
+
+        #: You can use this placeholder to store the real document size
+        self.document_size = None
+        #: You can use this placeholder to store the memory peak
+        self.memory_peak = None
 
     @property
     def started(self):

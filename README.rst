@@ -25,7 +25,7 @@ applications.
 Requirements
 ------------
 
-This library relies on Pinba_, Protobuf_ and Werkeug_.
+This library relies on Pinba_, Protobuf_ and Werkzeug_.
 You will need to install theses packages before using Pynba.
 
 The installation process requires setuptools to be installed.
@@ -34,19 +34,21 @@ If it is not, please refer to the installation of this package.
 Setup
 -----
 
-$ git clone https://github.com/IsCoolEntertainment/pynba.git
-$ python setup.py install
+::
+
+    $ git clone https://github.com/IsCoolEntertainment/pynba.git
+    $ python setup.py install
 
 Usage
 -----
 
-Says that your main WSGI application is
+Says that your main WSGI application is::
 
     def app(environ, start_response):
         ...
 
 
-Import the pynba decorator, and decorate your main app with it
+Import the pynba decorator, and decorate your main app with it::
 
     from iscool_e.pynba import monitor
 
